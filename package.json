@@ -1,0 +1,31 @@
+{
+  "name": "rspack-tailwind4-poc",
+  "version": "1.0.0",
+  "description": "POC: Rspack + PostCSS + React 18 + Tailwind v4 with full CSS precompilation",
+  "main": "index.js",
+  
+
+  "scripts": {
+    "build": "rspack build",
+    "dev": "rspack serve",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rspack/cli": "^1.7.11",
+    "@rspack/core": "^1.7.11",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "css-loader": "^7.1.4",
+    "postcss": "^8.5.8",
+    "postcss-loader": "^8.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.2",
+    "ts-loader": "^9.5.7",
+    "typescript": "^6.0.2"
+  }
+}
