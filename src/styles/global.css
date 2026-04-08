@@ -1,0 +1,103 @@
+/*
+ * src/styles/global.css
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * STRATEGY: Full precompile — ALL Tailwind utilities land in dist/styles.css.
+ *
+ * In Tailwind v4 the default behaviour is "content-aware": it scans your JSX/
+ * HTML files and only emits the classes it finds (tree-shaking).  If you need
+ * every utility present in the output (e.g. for a design-system library, an
+ * SSR app where classes may be injected at runtime, or a Storybook build) you
+ * must disable that behaviour.
+ *
+ * The directive that controls this is:
+ *
+ *   @source not "../**";   ← tell Tailwind: do NOT scan any source files
+ *
+ * Combined with the standard @import "tailwindcss" this forces the compiler
+ * to emit the full utility sheet unconditionally.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* 1. Pull in the full Tailwind v4 stylesheet (base + components + utilities) */
+@import "tailwindcss";
+
+
+/* Point to your external config file */
+@config "../../tailwind.config.js";
+
+/* 2. Disable source-file scanning so ALL utilities are emitted regardless of
+      which classes appear in your JSX/HTML files.                            */
+@source not "../**";
+
+/* ─── Custom design tokens (replaces tailwind.config.js in v4) ────────────── */
+@theme {
+  /* Extend / override the default colour palette */
+  --color-brand-50:  #f0f9ff;
+  --color-brand-100: #e0f2fe;
+  --color-brand-200: #bae6fd;
+  --color-brand-300: #7dd3fc;
+  --color-brand-400: #38bdf8;
+  --color-brand-500: #0ea5e9;
+  --color-brand-600: #0284c7;
+  --color-brand-700: #0369a1;
+  --color-brand-800: #075985;
+  --color-brand-900: #0c4a6e;
+
+  /* Custom typography scale */
+  --font-display: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "Geist Mono", "Fira Code", ui-monospace, monospace;
+
+  /* Custom spacing tokens */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-128: 32rem;
+
+  /* Custom breakpoints */
+  --breakpoint-xs: 30rem;   /* 480 px */
+  --breakpoint-3xl: 120rem; /* 1920 px */
+
+  /* Custom border-radius */
+  --radius-4xl: 2rem;
+
+  /* Custom box-shadow */
+  --shadow-glow: 0 0 15px 2px var(--color-brand-400);
+}
+
+/* ─── Base / global styles ────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-display);
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+}
+
+/* ─── Custom component classes ────────────────────────────────────────────── */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2
+           text-sm font-semibold text-white shadow-sm
+           hover:bg-brand-700 focus-visible:outline-2
+           focus-visible:outline-offset-2 focus-visible:outline-brand-600
+           transition-colors duration-150;
+  }
+
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5
+           text-xs font-medium;
+  }
+}
