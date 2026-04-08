@@ -10,15 +10,15 @@ export default function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8 gap-10">
+    <div className="min-h-screen bg-slate-50 p-8 gap-10 grid-template-rows-[auto_500px">
       {/* Header */}
-      <header className="mx-auto max-w-3xl mb-10">
+      <header className="max-w-3xl mx-auto mb-10">
         <h1 className="text-3xl font-bold text-brand-700 font-display">
           Rspack + PostCSS + Tailwind&nbsp;v4
         </h1>
-        <p className="mt-2 text-slate-500 text-sm">
+        <p className="mt-2 text-sm text-slate-500">
           Full precompile POC — every Tailwind utility is in{" "}
-          <code className="font-mono text-brand-600 bg-brand-50 px-1 rounded">
+          <code className="px-1 font-mono rounded text-brand-600 bg-brand-50">
             dist/styles.css
           </code>
           , regardless of DOM usage.
@@ -26,9 +26,9 @@ export default function App() {
       </header>
 
       {/* Cards grid */}
-      <main className="mx-auto max-w-3xl grid gap-6 sm:grid-cols-2">
+      <main className="grid max-w-3xl gap-6 mx-auto sm:grid-cols-2">
         {/* Counter card */}
-        <div className="card flex flex-col gap-4">
+        <div className="flex flex-col gap-4 card">
           <h2 className="font-semibold text-slate-800">Counter</h2>
           <p className="text-5xl font-bold text-brand-500 tabular-nums">
             {count}
@@ -47,7 +47,7 @@ export default function App() {
         </div>
 
         {/* Badges card */}
-        <div className="card flex flex-col gap-4">
+        <div className="flex flex-col gap-4 card">
           <h2 className="font-semibold text-slate-800">Custom tokens</h2>
           <div className="flex flex-wrap gap-2">
             {[
@@ -69,10 +69,10 @@ export default function App() {
 
         {/* Shadow-glow demo */}
         <div className="card sm:col-span-2">
-          <h2 className="font-semibold text-slate-800 mb-3">
+          <h2 className="mb-3 font-semibold text-slate-800">
             Custom shadow token
           </h2>
-          <div className="inline-block rounded-lg bg-brand-500 px-6 py-3 text-white shadow-glow">
+          <div className="inline-block px-6 py-3 text-white rounded-lg bg-brand-500 shadow-glow">
             shadow-glow utility
           </div>
         </div>

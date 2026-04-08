@@ -51,9 +51,10 @@
    @source inline("{hover:,focus:,active:,}text-{sm,base,lg,xl,2xl}");
    @source inline("{sm:,md:,lg:,}{grid-cols-1,grid-cols-2,grid-cols-3}"); */
 
-/* ── External JS config (optional) ────────────────────────────────────────
-   Uncomment to load a tailwind.config.js for safelist / blocklist options.
-   @config "../../tailwind.config.js"; */
+/* ── External JS config ───────────────────────────────────────────────────
+   Loads tailwind.config.js for blocklist / safelist options.
+   Path is relative to THIS file (src/styles/global.css).                 */
+@config "../../tailwind.config.js";
 
 
 @theme {
