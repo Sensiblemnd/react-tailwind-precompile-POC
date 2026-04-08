@@ -2,35 +2,60 @@
  * src/styles/global.css
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * STRATEGY: Full precompile — ALL Tailwind utilities land in dist/styles.css.
+ * STRATEGY: Controlled precompile — explicit source registration.
  *
- * In Tailwind v4 the default behaviour is "content-aware": it scans your JSX/
- * HTML files and only emits the classes it finds (tree-shaking).  If you need
- * every utility present in the output (e.g. for a design-system library, an
- * SSR app where classes may be injected at runtime, or a Storybook build) you
- * must disable that behaviour.
+ * Tailwind v4 is fundamentally scan-driven. It has NO "emit all utilities"
+ * flag. Utilities are generated ONLY for class names found in scanned files
+ * or explicitly declared via @source inline().
  *
- * The directive that controls this is:
+ * ┌─ Common misconception ───────────────────────────────────────────────────┐
+ * │  `@source not "../**"` does NOT disable scanning and emit everything.    │
+ * │  It merely excludes a path from scanning — utilities still require a     │
+ * │  source to be found in. With nothing left to scan, output is empty.      │
+ * └──────────────────────────────────────────────────────────────────────────┘
  *
- *   @source not "../**";   ← tell Tailwind: do NOT scan any source files
+ * The correct two-part approach used here:
  *
- * Combined with the standard @import "tailwindcss" this forces the compiler
- * to emit the full utility sheet unconditionally.
+ *   1. @import "tailwindcss" source(none)
+ *      Disables Tailwind's automatic CWD-based file detection entirely.
+ *      No implicit background scanning; you own the full source list.
+ *
+ *   2. @source "../"
+ *      Explicitly registers src/ (relative to this file) as the only
+ *      directory Tailwind scans. Deterministic, auditable, fast.
+ *
+ * TO ADD CLASSES NOT PRESENT IN SOURCE FILES (runtime / dynamic classes):
+ *   Use @source inline() with brace-expansion patterns, e.g.:
+ *     @source inline("bg-brand-{50,100,200,300,400,500,600,700,800,900}");
+ *     @source inline("{hover:,focus:,active:,}text-{sm,base,lg,xl,2xl}");
+ *     @source inline("{sm:,md:,lg:,}{grid-cols-1,grid-cols-2,grid-cols-3}");
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-/* 1. Pull in the full Tailwind v4 stylesheet (base + components + utilities) */
-@import "tailwindcss";
+/* ── Step 1: Import Tailwind with auto-detection disabled ─────────────────
+   source(none) turns off Tailwind's automatic CWD scanning so that the
+   set of scanned files is 100% determined by the @source rules below.    */
+@import "tailwindcss" source(none);
+
+/* ── Step 2: Register source directories explicitly ───────────────────────
+   Path is relative to THIS file (src/styles/global.css), so "../" = src/.
+   Tailwind will scan all non-binary, non-ignored files under src/ and emit
+   a utility class for every Tailwind token it recognises.                */
+@source "../";
+
+/* ── Step 3 (optional): Force-include classes absent from source files ────
+   Any class built dynamically at runtime won't be found by scanning.
+   Use @source inline() with brace-expansion to guarantee their presence:
+
+   @source inline("bg-brand-{50,100,200,300,400,500,600,700,800,900}");
+   @source inline("{hover:,focus:,active:,}text-{sm,base,lg,xl,2xl}");
+   @source inline("{sm:,md:,lg:,}{grid-cols-1,grid-cols-2,grid-cols-3}"); */
+
+/* ── External JS config (optional) ────────────────────────────────────────
+   Uncomment to load a tailwind.config.js for safelist / blocklist options.
+   @config "../../tailwind.config.js"; */
 
 
-/* Point to your external config file */
-@config "../../tailwind.config.js";
-
-/* 2. Disable source-file scanning so ALL utilities are emitted regardless of
-      which classes appear in your JSX/HTML files.                            */
-@source not "../**";
-
-/* ─── Custom design tokens (replaces tailwind.config.js in v4) ────────────── */
 @theme {
   /* Extend / override the default colour palette */
   --color-brand-50:  #f0f9ff;
@@ -64,7 +89,10 @@
   --shadow-glow: 0 0 15px 2px var(--color-brand-400);
 }
 
-/* ─── Base / global styles ────────────────────────────────────────────────── */
+/* ─── Base / global styles ────────────────────────────────────────────────────
+   Rules here run at the same specificity level as Tailwind's preflight reset.
+   Use for element defaults and global resets only — not for component styles.
+   ─────────────────────────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -82,7 +110,11 @@
   }
 }
 
-/* ─── Custom component classes ────────────────────────────────────────────── */
+/* ─── Custom component classes ────────────────────────────────────────────────
+   Multi-property, reusable classes built with @apply. Because this stylesheet
+   is scanned by the @source directive above, any Tailwind utilities used here
+   in @apply are also guaranteed to be included in the output.
+   ─────────────────────────────────────────────────────────────────────────── */
 @layer components {
   .btn-primary {
     @apply inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2
